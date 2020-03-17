@@ -4,7 +4,9 @@
   },
   "data_loader": {
     "name": "TimeSeries",
-    "data_path" : "../Datas/"
+    "data_path" : "E:\\deloi\\hugh\\code\\Archive\\dataset\\",
+	"file_name":"201607_201907_3.csv",
+	"y_column" : "tpos_post_sale_flag"
   },
   "model":{
     "name": "conv_mnist_model.ConvMnistModel",
