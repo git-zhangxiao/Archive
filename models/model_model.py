@@ -8,11 +8,35 @@ class Model(BaseModel):
         super(Model, self).__init__(config)
         self.build_model()
 
+    #def build_model(self):
+    #    #self.input_data = Input(name='the_input', shape=(28, 28), dtype='float32')
+    #    self.model = Sequential()
+    #    #self.model.add(Reshape((28, 28, 1), input_shape=(28, 28)))
+    #    self.model.add(Embedding(input_dim=28*28, output_dim=128, input_shape=(28, 28)))
+    #    self.model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
+    #    self.model.add(Conv2D(64, (3, 3), activation='relu'))
+    #    self.model.add(MaxPooling2D(pool_size=(2, 2)))
+    #    self.model.add(Dropout(0.25))
+    #    self.model.add(Conv2D(64, (3, 3), activation='relu'))
+    #    self.model.add(Conv2D(64, (3, 3), activation='relu'))
+    #    self.model.add(Dropout(0.25))
+    #    self.model.add(Flatten())
+    #    self.model.add(Dense(81, activation='relu'))
+    #    self.model.add(Dropout(0.5))
+    #    self.model.add(Dense(10))
+    #    self.model.add(Activation('softmax'))
+    #    self.model.summary()
+    #    self.model.compile(
+    #        loss='categorical_crossentropy',
+    #        optimizer=self.config['model']['optimizer'],
+    #        metrics=['acc'],
+    #    )
     def build_model(self):
         #self.input_data = Input(name='the_input', shape=(28, 28), dtype='float32')
         self.model = Sequential()
-        #self.model.add(Reshape((28, 28, 1), input_shape=(28, 28)))
-        self.model.add(Embedding(input_dim=28*28, output_dim=128, input_shape=(28, 28)))
+        self.model.add(Reshape((16, 16, 1), input_shape=(16, 16)))
+        #self.model.add(pad_sequence())
+        ##self.model.add(Embedding(input_dim=16*16+1, output_dim=128,input_shape=(16, 16)))
         self.model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
         self.model.add(Conv2D(64, (3, 3), activation='relu'))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -20,10 +44,10 @@ class Model(BaseModel):
         self.model.add(Conv2D(64, (3, 3), activation='relu'))
         self.model.add(Conv2D(64, (3, 3), activation='relu'))
         self.model.add(Dropout(0.25))
-        self.model.add(Flatten())
+        self.model.add(Flatten())#降维
         self.model.add(Dense(81, activation='relu'))
         self.model.add(Dropout(0.5))
-        self.model.add(Dense(10))
+        self.model.add(Dense(3))#分类的类数
         self.model.add(Activation('softmax'))
         self.model.summary()
         self.model.compile(
@@ -32,3 +56,14 @@ class Model(BaseModel):
             metrics=['acc'],
         )
 
+    def save_model(self):
+        if not os.path.isdir(self.config['model']['save_model_path']):
+            os.makedirs(self.config['model']['save_model_path'])
+            
+        self.model.save_weights(self.config['model']['save_model_path'],self.config['model']['save_weights_name'])
+        self.model.save(self.config['model']['save_model_path'],self.config['model']['save_model_name'])
+    
+    def load_model(self):
+        self.model.load_weights(self.config['model']['save_model_path'],self.config['model']['save_weights_name'], by_name=False)
+    
+    

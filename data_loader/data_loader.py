@@ -3,6 +3,9 @@ import os
 from keras.datasets import mnist
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from keras.preprocessing.sequence import pad_sequences
+import numpy as np
 import pandas as pd
 
 
@@ -49,7 +52,8 @@ class ModelDataLoader(BaseDataLoader):
                     ##yield (self.preprocessing(df_tw_prev), self.preprocessing(df_tw_curt))
                     prev_index = curt_index
                     curt_index += 1
-    
+            
+            
     
         elif self.config['data_loader']['name'] == 'SingleFile':
             print('SingleFile')
@@ -102,12 +106,32 @@ class ModelDataLoader(BaseDataLoader):
         return data
 
     def get_test_data(self):
-        return self.X_test, self.y_test
+        normalize_X_data = self.normalize(self.X_test)
+        return self.deal_X_reshape(normalize_X_data), to_categorical(self.y_test, 3)
     def get_validation_data(self):
-        return self.X_validation, self.y_validation       
+        normalize_X_data = self.normalize(self.X_validation)
+        return self.deal_X_reshape(normalize_X_data), to_categorical(self.y_validation,3)       
     def get_train_data(self):
-        return self.X_train, self.y_train
+        normalize_X_data = self.normalize(self.X_train)
+        return self.deal_X_reshape(normalize_X_data), to_categorical(self.y_train,3)
     
+    def deal_X_reshape(self,X_data):
+        X_train_data_seq = pad_sequences(X_data, maxlen=256,padding='post', truncating='post')
+        return np.reshape(X_train_data_seq, (-1,16,16))
+    def normalize(self,X_data):
+        #测试逻辑，删除stringCol
+        cols = X_data.columns
+        for col in cols:
+            if str(X_data[col].dtype) == 'object':
+                print(col)
+                X_data = X_data.drop([col],axis=1)
+                
+        min_max_scaler = MinMaxScaler()
+        # 归一化数据中的特征
+        normalized_X_data = min_max_scaler.fit_transform(X_data)
+        return normalized_X_data
+
+
 
 if __name__ == "__main__":
     print("begin")
