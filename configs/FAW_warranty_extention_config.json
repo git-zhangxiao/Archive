@@ -12,13 +12,13 @@
     "name": "conv_mnist_model.ConvMnistModel",
     "learning_rate": 0.001,
     "optimizer": "adadelta",
-	"save_model_path" : "E:\\deloi\\hugh\\code\\Archive\\",
-	"save_weights_name" : "weights.h5",
-	"save_model_name" : "model.h5"
+	"save_model_path" : "E:\\deloi\\hugh\\code\\Archive\\experiments\\",
+	"save_weights_name" : "E:\\deloi\\hugh\\code\\Archive\\experiments\\weights.h5",
+	"save_model_name" : "E:\\deloi\\hugh\\code\\Archive\\experiments\\model.h5"
   },
   "trainer":{
     "name": "simple_mnist_trainer.SimpleMnistModelTrainer",
-    "num_epochs": 20,
+    "num_epochs": 5,
     "batch_size": 64,
     "validation_split":0.25,
     "verbose_training": true

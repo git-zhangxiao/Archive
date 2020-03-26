@@ -16,8 +16,7 @@ class ModelTrainer(BaseTrain):
     def init_callbacks(self):
         self.callbacks.append(
             ModelCheckpoint(
-                filepath=os.path.join(self.config['callbacks']['checkpoint_dir'],
-                                      '%s-{epoch:02d}-{val_loss:.2f}.hdf5' % self.config['exp']['name']),
+                filepath=os.path.join(self.config['callbacks']['checkpoint_dir'],'%s-{epoch:02d}-{val_loss:.2f}.hdf5' % self.config['exp']['name']),
                 monitor=self.config['callbacks']['checkpoint_monitor'],
                 mode=self.config['callbacks']['checkpoint_mode'],
                 save_best_only=self.config['callbacks']['checkpoint_save_best_only'],
@@ -34,7 +33,7 @@ class ModelTrainer(BaseTrain):
         )
 
     def train(self):
-        history = self.model.fit(
+        history = self.model.model.fit(
             self.data[0], self.data[1],
             epochs=self.config['trainer']['num_epochs'],
             verbose=self.config['trainer']['verbose_training'],
@@ -42,6 +41,7 @@ class ModelTrainer(BaseTrain):
             validation_split=self.config['trainer']['validation_split'],
             callbacks=self.callbacks,
         )
+        self.model.save_model()
         self.loss.extend(history.history['loss'])
         self.acc.extend(history.history['acc'])
         self.val_loss.extend(history.history['val_loss'])

@@ -1,6 +1,7 @@
 from data_loader.data_loader import ModelDataLoader
 from models.model_model import Model
 from trainers.trainer import ModelTrainer
+from predictor.predictor import ModelPredict
 from utils.config import process_config
 from utils.dirs import create_dirs
 from utils.utils import get_args
@@ -21,15 +22,20 @@ def main():
 
     print('Create the data generator.')
     data_loader = ModelDataLoader(config)
+    data_loader.load_data()
+    #print(data_loader.get_test_data())
 
     print('Create the model.')
     model = Model(config)
 
-    print('Create the trainer')
-    trainer = ModelTrainer(model.model, data_loader.get_train_data(), config)
+    ###print('Create the trainer')
+    ###trainer = ModelTrainer(model, data_loader.get_train_data(), config)
 
-    print('Start training the model.')
-    trainer.train()
+    ###print('Start training the model.')
+    ###trainer.train()
+    
+    print('Start predict.')
+    predictor = ModelPredict(model, data_loader.get_train_data(), config)
 
 
 if __name__ == '__main__':
